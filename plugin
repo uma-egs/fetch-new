@@ -1,0 +1,122 @@
+let arr;
+let selectedItems = [];
+// let nextPage=document.querySelector(".nextPage")
+// let count=document.querySelector("#count")
+(function (pWindow) {
+  //   // if(typeof pWindow.CustomList == "function") {
+  //   // 	throw new Error("CustomList function already defined");
+  //   // }
+
+  //   /*===================== creating default values =============*/
+  const mainArray = [];
+  let CustomList = function (pId, options) {
+    // if(!(this instanceof CustomList)) {
+    // 	return new CustomList(pId, options);
+    // }
+    //   console.log(options)
+    this.domEl = document.getElementById(pId);
+    // if(!this.domEl) {
+    // 	throw new Error("dom not found");
+    // }
+    // this.options=options||{};
+    // if(typeof this.options.data == "undefined") {
+    // 	this.options.data = [];
+    // }
+    mainArray.push(options);
+    this.displayList();
+  };
+
+  //   /*==================== creating new list ================*/
+  CustomList.prototype.displayList = function (ele) {
+    // console.log(mainArray[0].data.students);
+    arr = mainArray[0].data.students;
+
+    // console.log(arr)
+    arr.forEach(({ id, image, name, price }) => {
+      //     // console.log(ele.image);
+      this.domEl.innerHTML += `<div class="col-lg-4 col-md-6 col-sm-6 mt-5  p-4">
+    <div class="card" >
+        <img src="${image}" class="card-img p-3" >
+        <div class="card-body">
+          <h5 class="card-title">${name}</h5>
+          <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+          <p class="fw-bold">Price: ${price}</p>
+          <a href="#" class="btn btn-primary w-100" onclick="addToCart(${id})">Add to cart</a>
+        </div>
+        </div>
+      </div>`;
+    });
+  };
+
+  pWindow.CustomList = CustomList;
+  
+})(window);
+// Added Items
+
+let nextPage = document.querySelector(".nextPage");
+let sp = document.querySelector(".sp");
+let displayPage = document.querySelector(".displayPage");
+let display_cart_page = document.querySelector("#display_cart_page");
+let cards = document.getElementsByClassName("card2")
+let content = document.querySelector(".content");
+let count = 0;
+
+function addToCart(id) {
+  count += 1;
+  sp.innerHTML = count;
+
+  arr.find((ele) => {
+    if (id === ele.id) {
+      selectedItems.push({
+        id: ele.id,
+        image: ele.image,
+        name: ele.name,
+        price: ele.price
+      });
+    }
+  });
+}
+// console.log(selectedItems)
+
+function nextPage2() {
+  // console.log(selectedItems);
+  content.style.display = "none";
+  display_cart_page.style.display = "block";
+  closeItems(selectedItems);
+}
+
+
+function remove1(id) {
+ 
+var selected_id = selectedItems.findIndex((ele) => {
+return id === ele.id
+  });
+  var selected = selectedItems.splice(selected_id, 1);
+ closeItems(selectedItems);
+}
+
+
+function closeItems(sele){
+  displayPage.innerHTML="";
+  sele.forEach(({ id, image, name, price }) => {
+    displayPage.innerHTML += `<div class="col-lg-4 col-md-6 col-sm-6 mt-5  p-4">
+  <div class="card card2 " >
+ <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-x-circle-fill x"  onclick="remove1(${id})" viewBox="0 0 16 16">
+  <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"/>
+</svg>
+      <img src="${image}" class="card-img p-3" >   
+      <div class="card-body">
+        <h5 class="card-title">${name}</h5>
+        <div class="quantity">
+        <label for="quan" class="fw-medium">Quantity</label>
+        
+       <input type="number" id="quan" >
+        </div>
+        <p class="fw-bold">Price: ${price}</p>
+      </div>
+      </div>
+    </div>`;
+  });
+} 
+
+
